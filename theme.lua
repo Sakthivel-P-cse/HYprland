@@ -1,0 +1,1 @@
+/home/sakthi/.config/hypr/themes/macchiato.lua
