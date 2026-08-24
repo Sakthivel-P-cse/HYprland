@@ -5,9 +5,12 @@
 ---- MONITORS ----
 --------------------
 
-hl.monitor({ output = "eDP-1", mode = "preferred", position = "auto",       scale = 1 })
-hl.monitor({ output = "DP-1",  mode = "preferred", position = "auto-right", scale = 1    })
+hl.monitor({ output = "HDMI-A-1", mode = "2560x1440@59.95", position = "0x0",    scale = 1 })
+hl.monitor({ output = "eDP-1",    mode = "preferred",         position = "2560x0", scale = 1 })
 hl.monitor({ output = "",      mode = "preferred", position = "auto",       scale = "auto" })
+
+hl.workspace_rule({ workspace = "1", monitor = "HDMI-A-1", default = true })
+hl.workspace_rule({ workspace = "2", monitor = "eDP-1", default = true })
 
 
 ----------------------

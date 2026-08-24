@@ -1,1 +1,1 @@
-/home/sakthi/.config/hypr/themes/matrix.lua
+/home/sakthi/.config/hypr/themes/macchiato.lua
