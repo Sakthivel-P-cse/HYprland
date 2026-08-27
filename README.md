@@ -12,7 +12,8 @@ not a drop-in configuration for another machine.
 - `themes/` — Macchiato and Matrix Hyprland/Hyprlock themes.
 - `hypridle.conf` — idle, lock, display power, and suspend timers.
 - `hyprpaper.conf` — wallpaper configuration.
-- `scripts/` — local OSD, connectivity, Bluetooth, and keybinding helpers.
+- `scripts/` — local OSD, connectivity, Bluetooth, keybinding, and display-resume helpers.
+- `system/` — source for the charger-dependent AMD power-mode service.
 - `hyprland.conf` — small generated/stub configuration retained for compatibility.
 
 The active `theme.lua` and `hyprlock.conf` entries are symbolic links to the

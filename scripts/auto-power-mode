@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+readonly ac_state="/sys/class/power_supply/ACAD/online"
+readonly cpu_root="/sys/devices/system/cpu"
+readonly platform_profile="/sys/firmware/acpi/platform_profile"
+readonly platform_choices="/sys/firmware/acpi/platform_profile_choices"
+
+if [[ ! -r "$ac_state" ]]; then
+    printf 'auto-power-mode: charger state is unavailable: %s\n' "$ac_state" >&2
+    exit 1
+fi
+
+case "$(<"$ac_state")" in
+    1)
+        governor="performance"
+        epp="performance"
+        profile="performance"
+        ;;
+    0)
+        governor="powersave"
+        epp="power"
+        profile="low-power"
+        ;;
+    *)
+        printf 'auto-power-mode: unknown charger state\n' >&2
+        exit 1
+        ;;
+esac
+
+for path in "$cpu_root"/cpu*/cpufreq/scaling_governor; do
+    [[ -e "$path" && -w "$path" ]] || continue
+    printf '%s\n' "$governor" > "$path"
+done
+
+for path in "$cpu_root"/cpu*/cpufreq/energy_performance_preference; do
+    [[ -e "$path" && -w "$path" ]] || continue
+    printf '%s\n' "$epp" > "$path"
+done
+
+if [[ -w "$platform_profile" ]] && grep -qw -- "$profile" "$platform_choices" 2>/dev/null; then
+    printf '%s\n' "$profile" > "$platform_profile"
+fi
