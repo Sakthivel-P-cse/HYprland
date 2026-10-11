@@ -52,13 +52,30 @@ will make only their corresponding keybindings unavailable.
 | `SUPER + SHIFT + 1-0` | Move the window to a workspace |
 | `SUPER + arrows` | Change focus |
 | `SUPER + SHIFT + arrows` | Move the window |
-| `SUPER + CTRL + arrows` | Resize the window |
+| `SUPER + CTRL + Left/Up` | Previous numbered workspace, one per press |
+| `SUPER + CTRL + Right/Down` | Next numbered workspace, including empty ones |
+| `SUPER + CTRL + H/J/K/L` | Resize the window |
 | `SUPER + I` | Open the keybinding cheat sheet |
 | `SUPER + SHIFT + I` | Select the Matrix theme |
 | `SUPER + CTRL + I` | Select the Macchiato theme |
 | `Print` | Capture the full screen |
 
 The complete binding definitions are in `conf/keybinds.lua`.
+
+Hold the middle mouse button and scroll up/down to select the previous/next
+numbered workspace (including empty workspaces). Ordinary scrolling and Super +
+number bindings remain available. Middle clicks are passed to apps unchanged;
+an app may also react to middle-button holds during the gesture.
+
+Hyprland 0.56.2 clears held-button bookkeeping when changing workspaces, which
+can skip native release bindings. `scripts/middle-workspace-wheel.py` therefore
+reads physical middle-button state from accessible mouse event devices and
+enables/disables the native wheel bindings over local Hyprland IPC. It runs once
+per session from `conf/autostart.lua`, uses only Python's standard library, and
+requires no package or system service. It does not grab or remap input. Release,
+disconnection, and normal helper shutdown disable the bindings; reload starts
+them disabled. While held, it reconciles state after reload. The input nodes must
+remain readable by the session user (they were readable when configured).
 
 ## Themes
 

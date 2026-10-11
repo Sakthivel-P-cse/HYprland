@@ -70,11 +70,14 @@ hl.bind(mainMod .. " + SHIFT + L",     hl.dsp.window.move({ direction = "right" 
 hl.bind(mainMod .. " + SHIFT + K",     hl.dsp.window.move({ direction = "up"    }))
 hl.bind(mainMod .. " + SHIFT + J",     hl.dsp.window.move({ direction = "down"  }))
 
--- Resize with CTRL + arrows + vim (repeating)
-hl.bind(mainMod .. " + CTRL + right", hl.dsp.window.resize({ x =  30, y =   0, relative = true }), { repeating = true })
-hl.bind(mainMod .. " + CTRL + left",  hl.dsp.window.resize({ x = -30, y =   0, relative = true }), { repeating = true })
-hl.bind(mainMod .. " + CTRL + up",    hl.dsp.window.resize({ x =   0, y = -30, relative = true }), { repeating = true })
-hl.bind(mainMod .. " + CTRL + down",  hl.dsp.window.resize({ x =   0, y =  30, relative = true }), { repeating = true })
+-- One numbered workspace per CTRL + SUPER + arrow press, including empty ones.
+-- No repeating flag: holding an arrow does not advance multiple workspaces.
+hl.bind(mainMod .. " + CTRL + left",  hl.dsp.focus({ workspace = "-1" }))
+hl.bind(mainMod .. " + CTRL + up",    hl.dsp.focus({ workspace = "-1" }))
+hl.bind(mainMod .. " + CTRL + right", hl.dsp.focus({ workspace = "+1" }))
+hl.bind(mainMod .. " + CTRL + down",  hl.dsp.focus({ workspace = "+1" }))
+
+-- Resize with CTRL + vim keys (repeating)
 hl.bind(mainMod .. " + CTRL + L",     hl.dsp.window.resize({ x =  30, y =   0, relative = true }), { repeating = true })
 hl.bind(mainMod .. " + CTRL + H",     hl.dsp.window.resize({ x = -30, y =   0, relative = true }), { repeating = true })
 hl.bind(mainMod .. " + CTRL + K",     hl.dsp.window.resize({ x =   0, y = -30, relative = true }), { repeating = true })
@@ -105,6 +108,21 @@ hl.bind(mainMod .. " + SHIFT + Tab", hl.dsp.focus({ workspace = "previous" }))
 -- Scroll through workspaces with mouse wheel
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
+
+-- Physical middle-button state is supplied by middle-workspace-wheel.py.
+-- Hyprland 0.56.2 can lose native release binds after changing workspace.
+-- Wheel binds start disabled on every reload; middle clicks are not intercepted.
+do
+    local wheelUp = hl.bind("mouse_up", hl.dsp.focus({ workspace = "-1" }),
+        { description = "Middle held: previous numbered workspace" })
+    local wheelDown = hl.bind("mouse_down", hl.dsp.focus({ workspace = "+1" }),
+        { description = "Middle held: next numbered workspace" })
+    function middle_workspace_wheel_set(enabled)
+        wheelUp:set_enabled(enabled)
+        wheelDown:set_enabled(enabled)
+    end
+    middle_workspace_wheel_set(false)
+end
 
 -- Lock / logout
 hl.bind(mainMod .. " + L",      hl.dsp.exec_cmd("hyprlock"))
